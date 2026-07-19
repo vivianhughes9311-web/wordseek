@@ -1,0 +1,68 @@
+const board = document.getElementById("board");
+const result = document.getElementById("answer");
+const details = document.getElementById("details");
+const mode = document.getElementById("mode");
+const solveButton = document.getElementById("solveButton");
+const clearButton = document.getElementById("clearButton");
+
+function detectMode(text) {
+  if (/4[- ]?letter/i.test(text)) return "4";
+  if (/5[- ]?letter/i.test(text)) return "5";
+
+  const firstBoardLine = text
+    .split("\n")
+    .find((line) => /[🟥🟨🟩]/u.test(line));
+
+  if (firstBoardLine) {
+    const squares = firstBoardLine.match(/[🟥🟨🟩]/gu) || [];
+    if (squares.length === 4 || squares.length === 5) return String(squares.length);
+  }
+
+  return mode.value;
+}
+
+async function solve() {
+  const text = board.value.trim();
+  if (!text) {
+    result.textContent = "Waiting…";
+    details.textContent = "Paste a board to begin.";
+    return;
+  }
+
+  mode.value = detectMode(text);
+  result.textContent = "Solving…";
+  details.textContent = "";
+
+  try {
+    const response = await fetch("/solve", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ mode: Number(mode.value), board: text }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || "Request failed.");
+
+    result.textContent = data.answer || "No candidates";
+    details.textContent = data.count
+      ? `${data.count.toLocaleString()} possible candidate${data.count === 1 ? "" : "s"}.`
+      : data.text;
+  } catch (error) {
+    result.textContent = "Error";
+    details.textContent = error.message;
+  }
+}
+
+let solveTimer;
+board.addEventListener("paste", () => setTimeout(solve, 50));
+board.addEventListener("input", () => {
+  clearTimeout(solveTimer);
+  solveTimer = setTimeout(solve, 300);
+});
+mode.addEventListener("change", solve);
+solveButton.addEventListener("click", solve);
+clearButton.addEventListener("click", () => {
+  board.value = "";
+  solve();
+  board.focus();
+});
