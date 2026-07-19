@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#111111">
+  <title>WordSeek Solver</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+    }
+    main {
+      width: min(900px, calc(100% - 32px));
+      margin: 40px auto;
+    }
+    h1 { margin-bottom: 8px; }
+    .hint { margin-top: 0; color: #aaa; }
+    .toolbar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin: 18px 0 10px;
+    }
+    select, button {
+      background: #1b1b1b;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 15px;
+    }
+    button { cursor: pointer; }
+    textarea {
+      width: 100%;
+      min-height: 380px;
+      resize: vertical;
+      background: #181818;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 10px;
+      padding: 14px;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+    .result {
+      margin-top: 15px;
+      background: #181818;
+      border: 1px solid #444;
+      padding: 16px;
+      border-radius: 10px;
+    }
+    #answer {
+      font-size: 30px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    #details { margin-top: 6px; color: #aaa; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>⚡ WordSeek Solver</h1>
+    <p class="hint">Paste the full board. It solves automatically.</p>
+
+    <div class="toolbar">
+      <label for="mode">Word length:</label>
+      <select id="mode">
+        <option value="4">4 letters</option>
+        <option value="5">5 letters</option>
+      </select>
+      <button id="solveButton" type="button">Solve</button>
+      <button id="clearButton" type="button">Clear</button>
+    </div>
+
+    <textarea id="board" placeholder="Example:\n🟥 🟨 🟥 🟥 LATE\n🟥 🟥 🟩 🟥 AWAY"></textarea>
+
+    <div class="result" aria-live="polite">
+      <div id="answer">Waiting…</div>
+      <div id="details">Paste a board to begin.</div>
+    </div>
+  </main>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>
